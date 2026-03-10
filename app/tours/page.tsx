@@ -10,15 +10,15 @@ export default function Tours() {
   return (
     <>
       <Navbar />
-    
+
       <HotelHeroSection
         title="Our Tours"
-        subtitle="Discover the beauty and adventure of Sri Lanka"
+        subtitle="Please Look At Our Featured Tour Itineraries For Travel Ideas. Then Speak To Us About Your Particular Interests, Your Travel Budgets And How Much Time You have To Spend On The Island."
         tagline="UNFORGETTABLE EXPERIENCES"
         backgroundImage="/ourTours.jpeg"
       />
 
-      <IntroText 
+      <IntroText
         label="Explore"
         title="Amazing Tours & Experiences"
         description="From wildlife safaris to cultural tours, beach relaxation to mountain adventures - we offer carefully crafted experiences that showcase the best of Sri Lanka's diverse landscapes and rich heritage."
@@ -26,9 +26,8 @@ export default function Tours() {
 
       <TourGrid tours={tours} />
 
-
-        <NewsletterSection />
-            <SiteFooter />
+      <NewsletterSection />
+      <SiteFooter />
     </>
   );
 }

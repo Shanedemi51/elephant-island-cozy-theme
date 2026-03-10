@@ -215,9 +215,14 @@ const fieldWrapClass = "border border-[#B8A77C]/60 p-3 bg-white rounded-lg";
 interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
+  showItineraryUpload?: boolean;
 }
 
-export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
+export default function ContactModal({
+  isOpen,
+  onClose,
+  showItineraryUpload = false,
+}: ContactModalProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [form, setForm] = useState<FormData>({
     name: "",
@@ -228,6 +233,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
     details: "",
     country: "",
   });
+  const [itineraryFile, setItineraryFile] = useState<File | null>(null);
 
   const steps = useMemo(
     () => [
@@ -262,7 +268,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     // TODO: send form to your API / email service
-    console.log("Enquiry:", form);
+    console.log("Enquiry:", form, itineraryFile);
     // Close modal after submission
     onClose();
   }
@@ -280,6 +286,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
         details: "",
         country: "",
       });
+      setItineraryFile(null);
     }
   }, [isOpen]);
 
@@ -288,11 +295,11 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div 
+      <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
         onClick={onClose}
       />
-      
+
       {/* Modal Content */}
       <div className="relative w-full max-w-md max-h-[90vh] overflow-y-auto">
         <div className="w-full bg-[#7F8454] backdrop-blur md:p-2 rounded-2xl">
@@ -302,8 +309,18 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
               onClick={onClose}
               className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
 
@@ -331,9 +348,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                 />
               </div>
 
-              <p className="mt-2 text-sm text-white/75">
-                {current.subtitle}
-              </p>
+              <p className="mt-2 text-sm text-white/75">{current.subtitle}</p>
             </div>
 
             <form className="mt-6 space-y-4" onSubmit={onSubmit}>
@@ -464,11 +479,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                         Select country
                       </option>
                       {COUNTRIES.map((c) => (
-                        <option
-                          key={c}
-                          className="text-black"
-                          value={c}
-                        >
+                        <option key={c} className="text-black" value={c}>
                           {c}
                         </option>
                       ))}
@@ -485,7 +496,7 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       Tell Us As Much As Possible
                     </label>
                     <textarea
-                      rows={6}
+                      rows={4}
                       value={form.details}
                       onChange={(e) => set("details", e.target.value)}
                       placeholder={
@@ -494,6 +505,32 @@ export default function ContactModal({ isOpen, onClose }: ContactModalProps) {
                       className="mt-2 w-full resize-none bg-transparent placeholder:text-slate-300 outline-none"
                     />
                   </div>
+
+                  {showItineraryUpload && (
+                    <div className={fieldWrapClass}>
+                      <label
+                        htmlFor="itinerary-upload"
+                        className="block font-marcellus text-sm text-black"
+                      >
+                        Upload Your Current Itinerary or Quote
+                      </label>
+                      <input
+                        id="itinerary-upload"
+                        type="file"
+                        accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                        onChange={(e) =>
+                          setItineraryFile(e.target.files?.[0] ?? null)
+                        }
+                        className="mt-2 block w-full text-sm text-gray-600 
+  file:mr-4 file:rounded-lg file:border-0 
+  file:bg-[#E8A7C5] file:px-5 file:py-2.5 
+  file:text-sm file:font-semibold file:text-white 
+  file:shadow-sm file:transition-all file:duration-200 
+  hover:file:bg-[#d98fb0] 
+  cursor-pointer"
+                      />
+                    </div>
+                  )}
                 </>
               )}
 

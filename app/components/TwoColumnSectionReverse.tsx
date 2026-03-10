@@ -72,6 +72,7 @@ const TwoColumnSectionReverse = () => {
       <ContactModal 
         isOpen={isContactModalOpen} 
         onClose={() => setIsContactModalOpen(false)} 
+        showItineraryUpload
       />
     </section>
   );
