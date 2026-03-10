@@ -67,7 +67,7 @@ export default function ParallaxFeatureSection({
               {/* subtitle */}
               <p className="mx-auto mt-4 max-w-xl text-sm leading-6 text-white/85">
                 A Superb Mix Of Beaches, Wildlife, Culture, Food And Landscapes
-                In The World's Most Beautiful Island.
+                In The World&apos;s Most Beautiful Island.
               </p>
             </div>
           </div>

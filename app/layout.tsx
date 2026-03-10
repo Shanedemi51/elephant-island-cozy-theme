@@ -3,6 +3,7 @@ import { Marcellus, Jost } from "next/font/google";
 import "./globals.css";
 import PreloaderGate from "./components/PreloaderGate";
 import LenisProvider from "./components/LenisProvider";
+import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
 
 const marcellus = Marcellus({
   variable: "--font-marcellus",
@@ -32,6 +33,7 @@ export default function RootLayout({
         <LenisProvider>
           <PreloaderGate>{children}</PreloaderGate>
         </LenisProvider>
+        <WhatsAppFloatingButton />
       </body>
     </html>
   );
