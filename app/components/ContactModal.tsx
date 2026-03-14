@@ -1,6 +1,10 @@
 "use client";
 
+import { ContactUsPayload, ContactUsSchema } from "@/types/email.types";
+import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useMemo, useState } from "react";
+import { Controller, FieldName, Path, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const COUNTRIES = [
   "Afghanistan",
@@ -198,15 +202,15 @@ const COUNTRIES = [
   "Zimbabwe",
 ];
 
-type FormData = {
-  name: string;
-  email: string;
-  phone: string;
-  travellingWith: "" | "partner" | "family" | "friends" | "solo";
-  accommodation: "" | "budget" | "standard" | "firstClass" | "luxury";
-  details: string;
-  country: string;
-};
+// type FormData = {
+//   name: string;
+//   email: string;
+//   phone: string;
+//   travellingWith: "" | "partner" | "family" | "friends" | "solo";
+//   accommodation: "" | "budget" | "standard" | "firstClass" | "luxury";
+//   details: string;
+//   country: string;
+// };
 
 const inputClass =
   "mt-2 w-full bg-white text-black placeholder:text-black/25 border-t border-slate-200";
@@ -224,15 +228,15 @@ export default function ContactModal({
   showItineraryUpload = false,
 }: ContactModalProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [form, setForm] = useState<FormData>({
-    name: "",
-    email: "",
-    phone: "",
-    travellingWith: "",
-    accommodation: "",
-    details: "",
-    country: "",
-  });
+  // const [form, setForm] = useState<FormData>({
+  //   name: "",
+  //   email: "",
+  //   phone: "",
+  //   travellingWith: "",
+  //   accommodation: "",
+  //   details: "",
+  //   country: "",
+  // });
   const [itineraryFile, setItineraryFile] = useState<File | null>(null);
 
   const steps = useMemo(
@@ -254,38 +258,93 @@ export default function ContactModal({
 
   const current = steps.find((s) => s.id === step)!;
 
-  function set<K extends keyof FormData>(key: K, value: FormData[K]) {
-    setForm((p) => ({ ...p, [key]: value }));
-  }
+  // function set<K extends keyof FormData>(key: K, value: FormData[K]) {
+  //   setForm((p) => ({ ...p, [key]: value }));
+  // }
 
-  function next() {
+  // function onSubmit(e: React.FormEvent) {
+  //   e.preventDefault();
+  //   // TODO: send form to your API / email service
+  //   console.log("Enquiry:", form, itineraryFile);
+  //   // Close modal after submission
+  //   onClose();
+  // }
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    trigger,
+    formState: { isSubmitting, errors },
+  } = useForm<ContactUsPayload>({
+    resolver: zodResolver(ContactUsSchema),
+  });
+
+  const handleSendForm = async (payload : ContactUsPayload) => {
+    try{
+      const res = await fetch ('/api/email/send-contact-us',{
+        method : "POST",
+        body : JSON.stringify({payload : payload})
+      })
+      if(!res.ok) {toast.error("failed to send email");}
+
+      toast.success("Email Sent!");
+      reset()
+      onClose()
+    }catch(err){
+      alert("error");
+    }
+  };
+
+  const formSteps = [
+    {
+      id: 1 as const,
+      title: "Your Details",
+      subtitle: "Tell us who you are",
+      fields: ["name", "email", "phone"],
+    },
+    {
+      id: 2 as const,
+      title: "Trip Preferences",
+      subtitle: "Help us tailor it",
+      fields: ["travelingWith", "accomodationStandard", "country"],
+    },
+    {
+      id: 3 as const,
+      title: "Travel Info",
+      subtitle: "Final details",
+      fields: ["description"],
+    },
+  ];
+
+  async function next() {
+    const fields = formSteps[step - 1].fields;
+    const output = await trigger(fields as Path<ContactUsPayload>[], {
+      shouldFocus: true,
+    });
+    console.log("Validation from trigger is :", output);
+    if (!output) return;
+
     if (step < 3) setStep((s) => (s + 1) as 1 | 2 | 3);
   }
   function prev() {
     if (step > 1) setStep((s) => (s - 1) as 1 | 2 | 3);
   }
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // TODO: send form to your API / email service
-    console.log("Enquiry:", form, itineraryFile);
-    // Close modal after submission
-    onClose();
-  }
-
   // Reset form when modal closes
   React.useEffect(() => {
     if (!isOpen) {
       setStep(1);
-      setForm({
-        name: "",
-        email: "",
-        phone: "",
-        travellingWith: "",
-        accommodation: "",
-        details: "",
-        country: "",
-      });
+      // setForm({
+      //   name: "",
+      //   email: "",
+      //   phone: "",
+      //   travellingWith: "",
+      //   accommodation: "",
+      //   details: "",
+      //   country: "",
+      // });
       setItineraryFile(null);
     }
   }, [isOpen]);
@@ -293,7 +352,7 @@ export default function ContactModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -351,7 +410,10 @@ export default function ContactModal({
               <p className="mt-2 text-sm text-white/75">{current.subtitle}</p>
             </div>
 
-            <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+            <form
+              className="mt-6 space-y-4"
+              onSubmit={handleSubmit(handleSendForm)}
+            >
               {/* STEP 1: Your Details (3 fields) */}
               {step === 1 && (
                 <>
@@ -361,9 +423,7 @@ export default function ContactModal({
                     </label>
                     <input
                       type="text"
-                      required
-                      value={form.name}
-                      onChange={(e) => set("name", e.target.value)}
+                      {...register("name")}
                       placeholder="Enter your name"
                       className={inputClass}
                     />
@@ -375,10 +435,8 @@ export default function ContactModal({
                       <span className="">*</span>
                     </label>
                     <input
-                      type="email"
-                      required
-                      value={form.email}
-                      onChange={(e) => set("email", e.target.value)}
+                      type="text"
+                      {...register("email")}
                       placeholder="Enter your email"
                       className={inputClass}
                     />
@@ -390,8 +448,7 @@ export default function ContactModal({
                     </label>
                     <input
                       type="tel"
-                      value={form.phone}
-                      onChange={(e) => set("phone", e.target.value)}
+                      {...register("phone")}
                       placeholder="+IDD XX XXX XXXX"
                       className={inputClass}
                     />
@@ -402,89 +459,102 @@ export default function ContactModal({
               {/* STEP 2: Trip Preferences (3 fields) */}
               {step === 2 && (
                 <>
-                  <div className={fieldWrapClass}>
-                    <label className="block font-marcellus text-sm text-black">
-                      Who Will You Be Travelling With?
-                    </label>
-                    <select
-                      value={form.travellingWith}
-                      onChange={(e) =>
-                        set(
-                          "travellingWith",
-                          e.target.value as FormData["travellingWith"],
-                        )
-                      }
-                      className="mt-2 w-full bg-transparent outline-none"
-                    >
-                      <option className="text-black" value="">
-                        Select
-                      </option>
-                      <option className="text-black" value="partner">
-                        Partner
-                      </option>
-                      <option className="text-black" value="family">
-                        Family
-                      </option>
-                      <option className="text-black" value="friends">
-                        Friends
-                      </option>
-                      <option className="text-black" value="solo">
-                        Solo
-                      </option>
-                    </select>
-                  </div>
+                  <Controller
+                    name="travelingWith"
+                    control={control}
+                    render={({ field }) => (
+                      <div className={fieldWrapClass}>
+                        <label className="block font-marcellus text-sm text-black">
+                          Who Will You Be Travelling With?
+                        </label>
+                        <select
+                          className="mt-2 w-full bg-transparent outline-none"
+                          onChange={field.onChange}
+                          value={field.value}
+                        >
+                          <option
+                            className="text-black"
+                            value=""
+                            disabled
+                          >
+                            Select
+                          </option>
+                          <option className="text-black" value="Partner">
+                            Partner
+                          </option>
+                          <option className="text-black" value="Family">
+                            Family
+                          </option>
+                          <option className="text-black" value="Friends">
+                            Friends
+                          </option>
+                          <option className="text-black" value="Solo">
+                            Solo
+                          </option>
+                        </select>
+                      </div>
+                    )}
+                  />
 
-                  <div className={fieldWrapClass}>
-                    <label className="block font-marcellus text-sm text-black">
-                      Standard Of Accommodation
-                    </label>
-                    <select
-                      value={form.accommodation}
-                      onChange={(e) =>
-                        set(
-                          "accommodation",
-                          e.target.value as FormData["accommodation"],
-                        )
-                      }
-                      className="mt-2 w-full bg-transparent outline-none"
-                    >
-                      <option className="text-black" value="">
-                        Select
-                      </option>
-                      <option className="text-black" value="budget">
-                        Budget
-                      </option>
-                      <option className="text-black" value="standard">
-                        Standard (3 Star)
-                      </option>
-                      <option className="text-black" value="firstClass">
-                        First Class (4/5 Star)
-                      </option>
-                      <option className="text-black" value="luxury">
-                        Luxury
-                      </option>
-                    </select>
-                  </div>
+                  <Controller
+                    name="accomodationStandard"
+                    control={control}
+                    render={({ field }) => (
+                      <div className={fieldWrapClass}>
+                        <label className="block font-marcellus text-sm text-black">
+                          Standard Of Accommodation
+                        </label>
+                        <select
+                          className="mt-2 w-full bg-transparent outline-none"
+                          onChange={field.onChange}
+                          value={field.value}
+                          defaultValue={""}
+                        >
+                          <option className="text-black" value="" disabled>
+                            Select
+                          </option>
+                          <option className="text-black" value="Budget">
+                            Budget
+                          </option>
+                          <option className="text-black" value="Standard">
+                            Standard (3 Star)
+                          </option>
+                          <option className="text-black" value="FirstClass">
+                            First Class (4/5 Star)
+                          </option>
+                          <option className="text-black" value="Luxury">
+                            Luxury
+                          </option>
+                        </select>
+                      </div>
+                    )}
+                  />
 
-                  <div className={fieldWrapClass}>
-                    <label className="block font-marcellus text-sm text-black">
-                      Your Country
-                    </label>
-                    <select
-                      value={form.country}
-                      onChange={(e) => set("country", e.target.value)}
-                      className="mt-2 w-full bg-transparent outline-none"
-                    >
-                      <option className="text-black" value="">
-                        Select country
-                      </option>
-                      {COUNTRIES.map((c) => (
-                        <option key={c} className="text-black" value={c}>
-                          {c}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <Controller
+                    control={control}
+                    name="country"
+                    render={({ field }) => (
+                      <div className={fieldWrapClass}>
+                        <label className="block font-marcellus text-sm text-black">
+                          Your Country
+                        </label>
+                        <select
+                          onChange={field.onChange}
+                          value={field.value}
+                          className="mt-2 w-full bg-transparent outline-none"
+                        >
+                          <option className="text-black" value="">
+                            Select country
+                          </option>
+                          {COUNTRIES.map((c) => (
+                            <option key={c} className="text-black" value={c}>
+                              {c}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+                  />
                 </>
               )}
 
@@ -497,8 +567,7 @@ export default function ContactModal({
                     </label>
                     <textarea
                       rows={4}
-                      value={form.details}
-                      onChange={(e) => set("details", e.target.value)}
+                      {...register("description")}
                       placeholder={
                         "1) Your dates of travel: MM/YY or DD/MM/YY\n2) How many people are travelling?\n3) If with kids: number & ages?"
                       }
@@ -562,7 +631,7 @@ export default function ContactModal({
                     type="submit"
                     className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
                   >
-                    Send Enquiry
+                    {isSubmitting ? "Sending Email..." : "Send Enquiry"}
                   </button>
                 )}
               </div>

@@ -4,6 +4,7 @@ import "./globals.css";
 import PreloaderGate from "./components/PreloaderGate";
 import LenisProvider from "./components/LenisProvider";
 import WhatsAppFloatingButton from "./components/WhatsAppFloatingButton";
+import { Toaster } from "react-hot-toast";
 
 const marcellus = Marcellus({
   variable: "--font-marcellus",
@@ -30,6 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${marcellus.variable} ${jost.variable} antialiased`}>
+        <Toaster/>
         <LenisProvider>
           <PreloaderGate>{children}</PreloaderGate>
         </LenisProvider>
