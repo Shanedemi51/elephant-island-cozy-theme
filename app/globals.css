@@ -10,8 +10,12 @@
   --color-foreground: var(--foreground);
   --font-marcellus: "Marcellus", serif;
   --font-jost: "Jost", sans-serif;
+  
 }
 
+@theme{
+  --color-custom-pink : #E8A7C5;
+}
 .font-marcellus {
   font-family: var(--font-marcellus);
 }

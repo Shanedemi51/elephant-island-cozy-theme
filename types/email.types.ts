@@ -3,12 +3,12 @@ import z from "zod";
 export const ContactUsSchema = z.object({
     name : z.string().min(3 , "Enter a valid name"),
     email : z.email("Enter a valid email"),
-    phone : z.string().min(10 , "Enter a valid phone number").max(10 , "Enter a valid phone number"),
-    travelingWith : z.string(),
-    accomodationStandard : z.string(),
-    country : z.string(),
+    phone : z.string().regex(/^[0-9]{10}$/, "Enter a valid 10 digit phone number"),
+    travelingWith : z.string().min(1 , "Please select a valid option"),
+    accomodationStandard : z.string().min(1 , "Please select a valid option"),
+    country : z.string().min(1 , "Please select a valid country"),
     description : z.string().optional(),
-    quotationFile : z.file().optional()
+    quotationFile : z.any().refine((files)=> !files || files.length === 0 || files[0].size <5*1024*1024 , "Max file size is 5 MB").optional(),
 });
 
 

@@ -202,16 +202,6 @@ const COUNTRIES = [
   "Zimbabwe",
 ];
 
-// type FormData = {
-//   name: string;
-//   email: string;
-//   phone: string;
-//   travellingWith: "" | "partner" | "family" | "friends" | "solo";
-//   accommodation: "" | "budget" | "standard" | "firstClass" | "luxury";
-//   details: string;
-//   country: string;
-// };
-
 const inputClass =
   "mt-2 w-full bg-white text-black placeholder:text-black/25 border-t border-slate-200";
 const fieldWrapClass = "border border-[#B8A77C]/60 p-3 bg-white rounded-lg";
@@ -228,16 +218,6 @@ export default function ContactModal({
   showItineraryUpload = false,
 }: ContactModalProps) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  // const [form, setForm] = useState<FormData>({
-  //   name: "",
-  //   email: "",
-  //   phone: "",
-  //   travellingWith: "",
-  //   accommodation: "",
-  //   details: "",
-  //   country: "",
-  // });
-  const [itineraryFile, setItineraryFile] = useState<File | null>(null);
 
   const steps = useMemo(
     () => [
@@ -258,18 +238,6 @@ export default function ContactModal({
 
   const current = steps.find((s) => s.id === step)!;
 
-  // function set<K extends keyof FormData>(key: K, value: FormData[K]) {
-  //   setForm((p) => ({ ...p, [key]: value }));
-  // }
-
-  // function onSubmit(e: React.FormEvent) {
-  //   e.preventDefault();
-  //   // TODO: send form to your API / email service
-  //   console.log("Enquiry:", form, itineraryFile);
-  //   // Close modal after submission
-  //   onClose();
-  // }
-
   const {
     register,
     handleSubmit,
@@ -279,22 +247,60 @@ export default function ContactModal({
     formState: { isSubmitting, errors },
   } = useForm<ContactUsPayload>({
     resolver: zodResolver(ContactUsSchema),
+    reValidateMode: "onChange",
+    values: {
+      name: "",
+      email: "",
+      phone: "",
+      travelingWith: "",
+      accomodationStandard: "",
+      country: ""
+    }
   });
 
-  const handleSendForm = async (payload : ContactUsPayload) => {
-    try{
-      const res = await fetch ('/api/email/send-contact-us',{
-        method : "POST",
-        body : JSON.stringify({payload : payload})
-      })
-      if(!res.ok) {toast.error("failed to send email");}
+  const hanldleFormData = async (payload: ContactUsPayload) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("name", payload.name);
+      formData.append("email", payload.email);
+      formData.append("phone", payload.phone);
+      formData.append("travelingWith", payload.travelingWith);
+      formData.append("accomodationStandard", payload.accomodationStandard);
+      formData.append("country", payload.country);
+      if (payload.description) {
+        formData.append("description", payload.description);
+      }
+
+      if (payload.quotationFile?.[0]) {
+        formData.append(
+          "quotationFile",
+          payload.quotationFile[0],
+          payload.quotationFile[0].name,
+        );
+      }
+
+      const res = await fetch("/api/email/send-form-data", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await res.json();
+
+      if (!result.success) {
+        toast.error("failed to send email");
+        return;
+      }
 
       toast.success("Email Sent!");
-      reset()
-      onClose()
-    }catch(err){
-      alert("error");
+      closeModal();
+    } catch (err) {
+      toast.error("Error Occured");
     }
+  };
+
+  const handleTest = async (payload: ContactUsPayload) => {
+    console.log("Payload is : ", payload);
   };
 
   const formSteps = [
@@ -333,21 +339,11 @@ export default function ContactModal({
   }
 
   // Reset form when modal closes
-  React.useEffect(() => {
-    if (!isOpen) {
-      setStep(1);
-      // setForm({
-      //   name: "",
-      //   email: "",
-      //   phone: "",
-      //   travellingWith: "",
-      //   accommodation: "",
-      //   details: "",
-      //   country: "",
-      // });
-      setItineraryFile(null);
-    }
-  }, [isOpen]);
+  const closeModal = () => {
+    reset();
+    onClose();
+    setStep(1);
+  };
 
   if (!isOpen) return null;
 
@@ -356,7 +352,7 @@ export default function ContactModal({
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={() => closeModal()}
       />
 
       {/* Modal Content */}
@@ -365,7 +361,7 @@ export default function ContactModal({
           <div className="border border-[#A39F58]/70 p-6 md:p-8 rounded-2xl">
             {/* Close button */}
             <button
-              onClick={onClose}
+              onClick={() => closeModal()}
               className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors"
             >
               <svg
@@ -412,7 +408,7 @@ export default function ContactModal({
 
             <form
               className="mt-6 space-y-4"
-              onSubmit={handleSubmit(handleSendForm)}
+              onSubmit={handleSubmit(hanldleFormData)}
             >
               {/* STEP 1: Your Details (3 fields) */}
               {step === 1 && (
@@ -435,7 +431,7 @@ export default function ContactModal({
                       <span className="">*</span>
                     </label>
                     <input
-                      type="text"
+                      type="email"
                       {...register("email")}
                       placeholder="Enter your email"
                       className={inputClass}
@@ -472,11 +468,7 @@ export default function ContactModal({
                           onChange={field.onChange}
                           value={field.value}
                         >
-                          <option
-                            className="text-black"
-                            value=""
-                            disabled
-                          >
+                          <option className="text-black" value="" disabled hidden>
                             Select
                           </option>
                           <option className="text-black" value="Partner">
@@ -508,9 +500,8 @@ export default function ContactModal({
                           className="mt-2 w-full bg-transparent outline-none"
                           onChange={field.onChange}
                           value={field.value}
-                          defaultValue={""}
                         >
-                          <option className="text-black" value="" disabled>
+                          <option className="text-black" value="" disabled hidden>
                             Select
                           </option>
                           <option className="text-black" value="Budget">
@@ -543,7 +534,7 @@ export default function ContactModal({
                           value={field.value}
                           className="mt-2 w-full bg-transparent outline-none"
                         >
-                          <option className="text-black" value="">
+                          <option className="text-black" value="" disabled hidden>
                             Select country
                           </option>
                           {COUNTRIES.map((c) => (
@@ -587,16 +578,17 @@ export default function ContactModal({
                         id="itinerary-upload"
                         type="file"
                         accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                        onChange={(e) =>
-                          setItineraryFile(e.target.files?.[0] ?? null)
-                        }
+                        {...register("quotationFile")}
+                        // onChange={(e) =>
+                        //   setItineraryFile(e.target.files?.[0] ?? null)
+                        // }
                         className="mt-2 block w-full text-sm text-gray-600 
-  file:mr-4 file:rounded-lg file:border-0 
-  file:bg-[#E8A7C5] file:px-5 file:py-2.5 
-  file:text-sm file:font-semibold file:text-white 
-  file:shadow-sm file:transition-all file:duration-200 
-  hover:file:bg-[#d98fb0] 
-  cursor-pointer"
+                file:mr-4 file:rounded-lg file:border-0 
+                file:bg-[#E8A7C5] file:px-5 file:py-2.5 
+                file:text-sm file:font-semibold file:text-white 
+                file:shadow-sm file:transition-all file:duration-200 
+                hover:file:bg-[#d98fb0] 
+                cursor-pointer"
                       />
                     </div>
                   )}
@@ -604,36 +596,58 @@ export default function ContactModal({
               )}
 
               {/* Buttons */}
-              <div className="mt-2 flex items-center gap-3">
-                <button
-                  type="button"
-                  onClick={prev}
-                  disabled={step === 1}
-                  className="w-1/3 border border-[#B8A77C]/70 py-3 text-center font-medium text-white/90 transition disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
-                >
-                  Back
-                </button>
-
-                {step < 3 ? (
+              <div className="flex flex-col">
+                <span className="text-custom-pink font-semibold line-clamp-1">
+                  {errors && (
+                    <span>
+                      <p>{errors.name?.message}</p>
+                      <p>{errors.email?.message}</p>
+                      <p>{errors.phone?.message}</p>
+                      <p>
+                        {errors.travelingWith && "Please select a valid option"}
+                      </p>
+                      <p>
+                        {errors.accomodationStandard &&
+                          "Please select a valid option"}
+                      </p>
+                      <p>
+                        {errors.country?.message &&
+                          "Please select a valid country"}
+                      </p>
+                    </span>
+                  )}
+                </span>
+                <div className="mt-2 flex items-center gap-3">
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      next();
-                    }}
-                    className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                    onClick={prev}
+                    disabled={step === 1}
+                    className="w-1/3 border border-[#B8A77C]/70 py-3 text-center font-medium text-white/90 transition disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
                   >
-                    Next
+                    Back
                   </button>
-                ) : (
-                  <button
-                    type="submit"
-                    className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
-                  >
-                    {isSubmitting ? "Sending Email..." : "Send Enquiry"}
-                  </button>
-                )}
+
+                  {step < 3 ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        next();
+                      }}
+                      className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                    >
+                      Next
+                    </button>
+                  ) : (
+                    <button
+                      type="submit"
+                      className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                    >
+                      {isSubmitting ? "Sending Email..." : "Send Enquiry"}
+                    </button>
+                  )}
+                </div>
               </div>
             </form>
           </div>
