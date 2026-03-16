@@ -445,7 +445,7 @@ export default function ContactModal({
                     <input
                       type="tel"
                       {...register("phone")}
-                      placeholder="+IDD XX XXX XXXX"
+                      placeholder="+94 XX XXX XXXX"
                       className={inputClass}
                     />
                   </div>
