@@ -299,10 +299,6 @@ export default function ContactModal({
     }
   };
 
-  const handleTest = async (payload: ContactUsPayload) => {
-    console.log("Payload is : ", payload);
-  };
-
   const formSteps = [
     {
       id: 1 as const,
