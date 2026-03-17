@@ -3,7 +3,7 @@ import z from "zod";
 export const ContactUsSchema = z.object({
     name : z.string().min(3 , "Enter a valid name"),
     email : z.email("Enter a valid email"),
-    phone : z.string().regex(/^[0-9]{10}$/, "Enter a valid 10 digit phone number"),
+    phone : z.string().regex(/^\+?[0-9]\d{9,14}$/, "Invalid phone number"),
     travelingWith : z.string().min(1 , "Please select a valid option"),
     accomodationStandard : z.string().min(1 , "Please select a valid option"),
     country : z.string().min(1 , "Please select a valid country"),

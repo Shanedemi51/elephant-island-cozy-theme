@@ -1,7 +1,12 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+// import React, { useMemo, useState } from "react";
 import { Parallax } from "react-parallax";
+import { ContactUsPayload, ContactUsSchema } from "@/types/email.types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMemo, useState } from "react";
+import { Controller, Path, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const COUNTRIES = [
   "Afghanistan",
@@ -219,15 +224,6 @@ export default function BookingHero({
   backgroundImage: string;
 }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [form, setForm] = useState<FormData>({
-    name: "",
-    email: "",
-    phone: "",
-    travellingWith: "",
-    accommodation: "",
-    details: "",
-    country: "",
-  });
 
   const steps = useMemo(
     () => [
@@ -248,22 +244,107 @@ export default function BookingHero({
 
   const current = steps.find((s) => s.id === step)!;
 
-  function set<K extends keyof FormData>(key: K, value: FormData[K]) {
-    setForm((p) => ({ ...p, [key]: value }));
-  }
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    trigger,
+    formState: { isSubmitting, errors },
+  } = useForm<ContactUsPayload>({
+    resolver: zodResolver(ContactUsSchema),
+    reValidateMode: "onChange",
+    values: {
+      name: "",
+      email: "",
+      phone: "",
+      travelingWith: "",
+      accomodationStandard: "",
+      country: "",
+    },
+  });
 
-  function next() {
+  const hanldleFormData = async (payload: ContactUsPayload) => {
+    try {
+      const formData = new FormData();
+
+      formData.append("name", payload.name);
+      formData.append("email", payload.email);
+      formData.append("phone", payload.phone);
+      formData.append("travelingWith", payload.travelingWith);
+      formData.append("accomodationStandard", payload.accomodationStandard);
+      formData.append("country", payload.country);
+      if (payload.description) {
+        formData.append("description", payload.description);
+      }
+
+      if (payload.quotationFile?.[0]) {
+        formData.append(
+          "quotationFile",
+          payload.quotationFile[0],
+          payload.quotationFile[0].name,
+        );
+      }
+
+      const res = await fetch("/api/email/send-form-data", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await res.json();
+
+      if (!result.success) {
+        toast.error("failed to send email");
+        return;
+      }
+
+      toast.success("Email Sent!");
+      closeModal();
+    } catch (err) {
+      toast.error("Error Occured");
+    }
+  };
+
+  const formSteps = [
+    {
+      id: 1 as const,
+      title: "Your Details",
+      subtitle: "Tell us who you are",
+      fields: ["name", "email", "phone"],
+    },
+    {
+      id: 2 as const,
+      title: "Trip Preferences",
+      subtitle: "Help us tailor it",
+      fields: ["travelingWith", "accomodationStandard", "country"],
+    },
+    {
+      id: 3 as const,
+      title: "Travel Info",
+      subtitle: "Final details",
+      fields: ["description"],
+    },
+  ];
+
+  async function next() {
+    const fields = formSteps[step - 1].fields;
+    const output = await trigger(fields as Path<ContactUsPayload>[], {
+      shouldFocus: true,
+    });
+    console.log("Validation from trigger is :", output);
+    if (!output) return;
+
     if (step < 3) setStep((s) => (s + 1) as 1 | 2 | 3);
   }
   function prev() {
     if (step > 1) setStep((s) => (s - 1) as 1 | 2 | 3);
   }
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // TODO: send form to your API / email service
-    console.log("Enquiry:", form);
-  }
+  // Reset form when modal closes
+  const closeModal = () => {
+    reset();
+    setStep(1);
+  };
 
   return (
     <section className="relative w-full">
@@ -282,8 +363,6 @@ export default function BookingHero({
             <div className="grid w-full grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
               {/* Left text */}
               <div className="lg:col-span-7 text-center p-4 lg:text-left">
-                
-
                 <h1 className="font-marcellus text-4xl leading-[1.02] text-white md:text-5xl">
                   Contact Our Sri Lanka Travel Experts
                 </h1>
@@ -292,40 +371,61 @@ export default function BookingHero({
                   Tel : +94 77 707 2265
                 </h2>
 
-                 <h2 className="font-marcellus text-xl leading-[1.02] text-white md:text-2xl mt-6">
+                <h2 className="font-marcellus text-xl leading-[1.02] text-white md:text-2xl mt-6">
                   Email : info@elephant-island.com
                 </h2>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12">
+                  <div>
+                    <img
+                      src="/team/shane.jpeg"
+                      className="w-full rounded-full"
+                      alt=""
+                    />
+                    <h6 className="text-white text-xl mt-2 text-center">
+                      Shane
+                    </h6>
+                  </div>
 
-                    <div>
-                      <img src="/team/shane.jpeg" className="w-full rounded-full" alt="" />
-                      <h6 className="text-white text-xl mt-2 text-center">Shane</h6>
-                    </div>
+                  <div>
+                    <img
+                      src="/team/ashan.jpeg"
+                      className="w-full rounded-full"
+                      alt=""
+                    />
+                    <h6 className="text-white text-xl mt-2 text-center">
+                      Ashan
+                    </h6>
+                  </div>
 
-                    <div>
-                      <img src="/team/ashan.jpeg" className="w-full rounded-full" alt="" />
-                      <h6 className="text-white text-xl mt-2 text-center">Ashan</h6>
-                    </div>
+                  <div>
+                    <img
+                      src="/team/rangila.jpeg"
+                      className="w-full rounded-full"
+                      alt=""
+                    />
+                    <h6 className="text-white text-xl mt-2 text-center">
+                      Rangila
+                    </h6>
+                  </div>
 
-                    <div>
-                      <img src="/team/rangila.jpeg" className="w-full rounded-full" alt="" />
-                      <h6 className="text-white text-xl mt-2 text-center">Rangila</h6>
-                    </div>
-
-                    <div>
-                      <img src="/team/riyaz.jpeg" className="w-full rounded-full" alt="" />
-                      <h6 className="text-white text-xl mt-2 text-center">Riyaz</h6>
-                    </div>
-
+                  <div>
+                    <img
+                      src="/team/riyaz.jpeg"
+                      className="w-full rounded-full"
+                      alt=""
+                    />
+                    <h6 className="text-white text-xl mt-2 text-center">
+                      Riyaz
+                    </h6>
+                  </div>
                 </div>
-               
               </div>
 
               {/* Right booking card */}
               <div className="lg:col-span-5 flex justify-center lg:justify-end">
                 <div className="w-full max-w-md bg-[#7F8454] backdrop-blur md:p-2 rounded-2xl">
-                  <div className="border border-[#A39F58]/70 p-6 md:p-8 rounded-2xl">
+                  <div className="border border-[#A39F58]/70 p-6 md:p-8 rounded-2xl">                    
                     <p className="text-center text-xs font-semibold tracking-[0.22em] text-white/85">
                       PLAN YOUR TRIP
                     </p>
@@ -355,7 +455,10 @@ export default function BookingHero({
                       </p>
                     </div>
 
-                    <form className="mt-6 space-y-4" onSubmit={onSubmit}>
+                    <form
+                      className="mt-6 space-y-4"
+                      onSubmit={handleSubmit(hanldleFormData)}
+                    >
                       {/* STEP 1: Your Details (3 fields) */}
                       {step === 1 && (
                         <>
@@ -365,9 +468,7 @@ export default function BookingHero({
                             </label>
                             <input
                               type="text"
-                              required
-                              value={form.name}
-                              onChange={(e) => set("name", e.target.value)}
+                              {...register("name")}
                               placeholder="Enter your name"
                               className={inputClass}
                             />
@@ -380,9 +481,7 @@ export default function BookingHero({
                             </label>
                             <input
                               type="email"
-                              required
-                              value={form.email}
-                              onChange={(e) => set("email", e.target.value)}
+                              {...register("email")}
                               placeholder="Enter your email"
                               className={inputClass}
                             />
@@ -394,9 +493,8 @@ export default function BookingHero({
                             </label>
                             <input
                               type="tel"
-                              value={form.phone}
-                              onChange={(e) => set("phone", e.target.value)}
-                              placeholder="+IDD XX XXX XXXX"
+                              {...register("phone")}
+                              placeholder="+94 XX XXX XXXX"
                               className={inputClass}
                             />
                           </div>
@@ -406,97 +504,132 @@ export default function BookingHero({
                       {/* STEP 2: Trip Preferences (3 fields) */}
                       {step === 2 && (
                         <>
-                          <div className={fieldWrapClass}>
-                            <label className="block font-marcellus text-sm text-black">
-                              Who Will You Be Travelling With?
-                            </label>
-                            <select
-                              value={form.travellingWith}
-                              onChange={(e) =>
-                                set(
-                                  "travellingWith",
-                                  e.target.value as FormData["travellingWith"],
-                                )
-                              }
-                              className="mt-2 w-full bg-transparent outline-none"
-                            >
-                              <option className="text-black" value="">
-                                Select
-                              </option>
-                              <option className="text-black" value="partner">
-                                Partner
-                              </option>
-                              <option className="text-black" value="family">
-                                Family
-                              </option>
-                              <option className="text-black" value="friends">
-                                Friends
-                              </option>
-                              <option className="text-black" value="solo">
-                                Solo
-                              </option>
-                            </select>
-                          </div>
-
-                          <div className={fieldWrapClass}>
-                            <label className="block font-marcellus text-sm text-black">
-                              Standard Of Accommodation
-                            </label>
-                            <select
-                              value={form.accommodation}
-                              onChange={(e) =>
-                                set(
-                                  "accommodation",
-                                  e.target.value as FormData["accommodation"],
-                                )
-                              }
-                              className="mt-2 w-full bg-transparent outline-none"
-                            >
-                              <option className="text-black" value="">
-                                Select
-                              </option>
-                              <option className="text-black" value="budget">
-                                Budget
-                              </option>
-                              <option className="text-black" value="standard">
-                                Standard (3 Star)
-                              </option>
-                              <option className="text-black" value="firstClass">
-                                First Class (4/5 Star)
-                              </option>
-                              <option className="text-black" value="luxury">
-                                Luxury
-                              </option>
-                            </select>
-                          </div>
-
-                          <div className={fieldWrapClass}>
-                            <label className="block font-marcellus text-sm text-black">
-                              Your Country
-                            </label>
-                            <select
-                              value={form.country}
-                              onChange={(e) => set("country", e.target.value)}
-                              className="mt-2 w-full bg-transparent outline-none"
-                            >
-                              <option className="text-black" value="">
-                                Select country
-                              </option>
-                              {COUNTRIES.map((c) => (
-                                <option
-                                  key={c}
-                                  className="text-black"
-                                  value={c}
+                          <Controller
+                            name="travelingWith"
+                            control={control}
+                            render={({ field }) => (
+                              <div className={fieldWrapClass}>
+                                <label className="block font-marcellus text-sm text-black">
+                                  Who Will You Be Travelling With?
+                                </label>
+                                <select
+                                  className="mt-2 w-full bg-transparent outline-none"
+                                  onChange={field.onChange}
+                                  value={field.value}
                                 >
-                                  {c}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
+                                  <option
+                                    className="text-black"
+                                    value=""
+                                    disabled
+                                    hidden
+                                  >
+                                    Select
+                                  </option>
+                                  <option
+                                    className="text-black"
+                                    value="Partner"
+                                  >
+                                    Partner
+                                  </option>
+                                  <option className="text-black" value="Family">
+                                    Family
+                                  </option>
+                                  <option
+                                    className="text-black"
+                                    value="Friends"
+                                  >
+                                    Friends
+                                  </option>
+                                  <option className="text-black" value="Solo">
+                                    Solo
+                                  </option>
+                                </select>
+                              </div>
+                            )}
+                          />
+
+                          <Controller
+                            name="accomodationStandard"
+                            control={control}
+                            render={({ field }) => (
+                              <div className={fieldWrapClass}>
+                                <label className="block font-marcellus text-sm text-black">
+                                  Standard Of Accommodation
+                                </label>
+                                <select
+                                  className="mt-2 w-full bg-transparent outline-none"
+                                  onChange={field.onChange}
+                                  value={field.value}
+                                >
+                                  <option
+                                    className="text-black"
+                                    value=""
+                                    disabled
+                                    hidden
+                                  >
+                                    Select
+                                  </option>
+                                  <option className="text-black" value="Budget">
+                                    Budget
+                                  </option>
+                                  <option
+                                    className="text-black"
+                                    value="Standard"
+                                  >
+                                    Standard (3 Star)
+                                  </option>
+                                  <option
+                                    className="text-black"
+                                    value="FirstClass"
+                                  >
+                                    First Class (4/5 Star)
+                                  </option>
+                                  <option className="text-black" value="Luxury">
+                                    Luxury
+                                  </option>
+                                </select>
+                              </div>
+                            )}
+                          />
+
+                          <Controller
+                            control={control}
+                            name="country"
+                            render={({ field }) => (
+                              <div className={fieldWrapClass}>
+                                <label className="block font-marcellus text-sm text-black">
+                                  Your Country
+                                </label>
+                                <select
+                                  onChange={field.onChange}
+                                  value={field.value}
+                                  className="mt-2 w-full bg-transparent outline-none"
+                                >
+                                  <option
+                                    className="text-black"
+                                    value=""
+                                    disabled
+                                    hidden
+                                  >
+                                    Select country
+                                  </option>
+                                  {COUNTRIES.map((c) => (
+                                    <option
+                                      key={c}
+                                      className="text-black"
+                                      value={c}
+                                    >
+                                      {c}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
+                            )}
+                          />
                         </>
                       )}
 
-                      {/* STEP 3: Travel Info (1 field, but still 3 “questions” via placeholder prompts) */}
+                      {/* STEP 3: Travel Info (1 field, but still 3 "questions" via placeholder prompts) */}
                       {step === 3 && (
                         <>
                           <div className={fieldWrapClass}>
@@ -504,9 +637,8 @@ export default function BookingHero({
                               Tell Us As Much As Possible
                             </label>
                             <textarea
-                              rows={6}
-                              value={form.details}
-                              onChange={(e) => set("details", e.target.value)}
+                              rows={4}
+                              {...register("description")}
                               placeholder={
                                 "1) Your dates of travel: MM/YY or DD/MM/YY\n2) How many people are travelling?\n3) If with kids: number & ages?"
                               }
@@ -517,32 +649,61 @@ export default function BookingHero({
                       )}
 
                       {/* Buttons */}
-                      <div className="mt-2 flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={prev}
-                          disabled={step === 1}
-                          className="w-1/3 border border-[#B8A77C]/70 py-3 text-center font-medium text-white/90 transition disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
-                        >
-                          Back
-                        </button>
-
-                        {step < 3 ? (
+                      <div className="flex flex-col">
+                        <span className="text-custom-pink font-semibold line-clamp-1">
+                          {errors && (
+                            <span>
+                              <p>{errors.name?.message}</p>
+                              <p>{errors.email?.message}</p>
+                              <p>{errors.phone?.message}</p>
+                              <p>
+                                {errors.travelingWith &&
+                                  "Please select a valid option"}
+                              </p>
+                              <p>
+                                {errors.accomodationStandard &&
+                                  "Please select a valid option"}
+                              </p>
+                              <p>
+                                {errors.country?.message &&
+                                  "Please select a valid country"}
+                              </p>
+                            </span>
+                          )}
+                        </span>
+                        <div className="mt-2 flex items-center gap-3">
                           <button
                             type="button"
-                            onClick={next}
-                            className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                            onClick={prev}
+                            disabled={step === 1}
+                            className="w-1/3 border border-[#B8A77C]/70 py-3 text-center font-medium text-white/90 transition disabled:cursor-not-allowed disabled:opacity-40 cursor-pointer"
                           >
-                            Next
+                            Back
                           </button>
-                        ) : (
-                          <button
-                            type="submit"
-                            className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
-                          >
-                            Send Enquiry
-                          </button>
-                        )}
+
+                          {step < 3 ? (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                next();
+                              }}
+                              className="w-2/3 bg-custom-pink py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                            >
+                              Next
+                            </button>
+                          ) : (
+                            <button
+                              type="submit"
+                              className="w-2/3 bg-custom-pink py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                            >
+                              {isSubmitting
+                                ? "Sending Email..."
+                                : "Send Enquiry"}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </form>
                   </div>

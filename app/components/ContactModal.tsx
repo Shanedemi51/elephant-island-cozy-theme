@@ -299,10 +299,6 @@ export default function ContactModal({
     }
   };
 
-  const handleTest = async (payload: ContactUsPayload) => {
-    console.log("Payload is : ", payload);
-  };
-
   const formSteps = [
     {
       id: 1 as const,
@@ -445,7 +441,7 @@ export default function ContactModal({
                     <input
                       type="tel"
                       {...register("phone")}
-                      placeholder="+IDD XX XXX XXXX"
+                      placeholder="+94 XX XXX XXXX"
                       className={inputClass}
                     />
                   </div>

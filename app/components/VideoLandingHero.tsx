@@ -1,4 +1,8 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import ContactModal from "./ContactModal";
 
 type VideoLandingHeroProps = {
   mobileSrc?: string;
@@ -52,6 +56,7 @@ export default function VideoLandingHero({
 }: VideoLandingHeroProps) {
   const mobileEmbedSrc = getYouTubeEmbedUrl(mobileSrc);
   const desktopEmbedSrc = getYouTubeEmbedUrl(desktopSrc);
+  const [isContactModalOpen , setIsContactModalOpen] = useState(false);
 
   return (
     <section className="relative h-screen md:h-[75dvh] lg:h-screen w-full overflow-hidden bg-black">
@@ -89,12 +94,14 @@ export default function VideoLandingHero({
         />
         <h3 className="mb-8 font-marcellus">Elephant Island</h3>
 
-        <button className="mt-4 px-8 py-4 bg-[#E8A7C5] text-black rounded-full">
+        <button className="mt-4 px-8 py-4 bg-custom-pink text-black rounded-full" onClick={()=>setIsContactModalOpen(true)}>
           Enquire
         </button>
 
         <h1 className="font-marcellus text-2xl mt-12">Sri Lanka Holidays</h1>
       </div>
+
+      <ContactModal isOpen={isContactModalOpen} onClose={()=>setIsContactModalOpen(false)}/>
     </section>
   );
 }
