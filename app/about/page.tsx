@@ -1,3 +1,4 @@
+"use client"
 import HotelHeroSection from "../components/HotelHeroSection";
 import Navbar from "../components/Navbar";
 import ContactSplitSection from "../components/ContactSplitSection";
@@ -18,11 +19,8 @@ export default function About() {
         backgroundImage="/sea.jpeg"
       />
       <ContactSplitSection />
-
       <BookingHero backgroundImage="/road.jpg" />
-
       <ImageOffsetSwiper slides={tours} />
-
       <NewsletterSection />
       <SiteFooter />
     </>

@@ -8,7 +8,9 @@ export const ContactUsSchema = z.object({
     accomodationStandard : z.string().min(1 , "Please select a valid option"),
     country : z.string().min(1 , "Please select a valid country"),
     description : z.string().optional(),
+    currentUrl : z.string().optional(),
     quotationFile : z.any().refine((files)=> !files || files.length === 0 || files[0].size <5*1024*1024 , "Max file size is 5 MB").optional(),
+    
 });
 
 

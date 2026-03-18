@@ -16,6 +16,7 @@ export async function POST(req: Request) {
     const country = formData.get("country") as string;
     const description = formData.get("description") as string | null;
     const quotationFile = formData.get("quotationFile") as File | null;
+    const currentUrl = formData.get("currentUrl") as string;
 
     const attachments  : {filename : string , content : Buffer}[]= [];
     if(quotationFile){
@@ -34,6 +35,7 @@ export async function POST(req: Request) {
         accomodationStandard,
         country,
         description : description || undefined,
+        currentUrl
     }
 
 

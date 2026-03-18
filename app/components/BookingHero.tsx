@@ -4,9 +4,10 @@
 import { Parallax } from "react-parallax";
 import { ContactUsPayload, ContactUsSchema } from "@/types/email.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, Path, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 const COUNTRIES = [
   "Afghanistan",
@@ -204,15 +205,15 @@ const COUNTRIES = [
   "Zimbabwe",
 ];
 
-type FormData = {
-  name: string;
-  email: string;
-  phone: string;
-  travellingWith: "" | "partner" | "family" | "friends" | "solo";
-  accommodation: "" | "budget" | "standard" | "firstClass" | "luxury";
-  details: string;
-  country: string;
-};
+// type FormData = {
+//   name: string;
+//   email: string;
+//   phone: string;
+//   travellingWith: "" | "partner" | "family" | "friends" | "solo";
+//   accommodation: "" | "budget" | "standard" | "firstClass" | "luxury";
+//   details: string;
+//   country: string;
+// };
 
 const inputClass =
   "mt-2 w-full bg-white text-black placeholder:text-black/25 border-t border-slate-200";
@@ -224,6 +225,14 @@ export default function BookingHero({
   backgroundImage: string;
 }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [currenthPath, setCurrentPath] = useState("");
+  useEffect(() => {
+    const fromUrl =
+      typeof window !== undefined
+        ? window.location.href
+        : "Intentional Empty String";
+    setCurrentPath(fromUrl);
+  }, []);
 
   const steps = useMemo(
     () => [
@@ -261,6 +270,7 @@ export default function BookingHero({
       travelingWith: "",
       accomodationStandard: "",
       country: "",
+      currentUrl: currenthPath,
     },
   });
 
@@ -274,6 +284,7 @@ export default function BookingHero({
       formData.append("travelingWith", payload.travelingWith);
       formData.append("accomodationStandard", payload.accomodationStandard);
       formData.append("country", payload.country);
+      formData.append("currentUrl", payload.currentUrl as string);
       if (payload.description) {
         formData.append("description", payload.description);
       }
@@ -425,7 +436,7 @@ export default function BookingHero({
               {/* Right booking card */}
               <div className="lg:col-span-5 flex justify-center lg:justify-end">
                 <div className="w-full max-w-md bg-[#7F8454] backdrop-blur md:p-2 rounded-2xl">
-                  <div className="border border-[#A39F58]/70 p-6 md:p-8 rounded-2xl">                    
+                  <div className="border border-[#A39F58]/70 p-6 md:p-8 rounded-2xl">
                     <p className="text-center text-xs font-semibold tracking-[0.22em] text-white/85">
                       PLAN YOUR TRIP
                     </p>
