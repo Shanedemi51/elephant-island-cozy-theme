@@ -16,36 +16,41 @@ export async function POST(req: Request) {
     const country = formData.get("country") as string;
     const description = formData.get("description") as string | null;
     const quotationFile = formData.get("quotationFile") as File | null;
+    const currentUrl = formData.get("currentUrl") as string;
 
-    const attachments  : {filename : string , content : Buffer}[]= [];
-    if(quotationFile){
-        const buffer = Buffer.from(await quotationFile.arrayBuffer())
-        attachments.push({
-            filename : quotationFile.name,
-            content : buffer
-        })
+    const attachments: { filename: string; content: Buffer }[] = [];
+    if (quotationFile) {
+      const buffer = Buffer.from(await quotationFile.arrayBuffer());
+      attachments.push({
+        filename: quotationFile.name,
+        content: buffer,
+      });
     }
 
-    const payload : ContactUsPayload = {
-        name,
-        email,
-        phone,
-        travelingWith,
-        accomodationStandard,
-        country,
-        description : description || undefined,
-    }
-
+    const payload: ContactUsPayload = {
+      name,
+      email,
+      phone,
+      travelingWith,
+      accomodationStandard,
+      country,
+      description: description || undefined,
+      currentUrl,
+    };
 
     const data = await resend.emails.send({
       from: "Elephant-Island <notifications@elephant-island.com>",
-      to: ["info@elephant-island.com"],
+      to: [
+        "info@elephant-island.com",
+        "riyaz@srilankainluxury.com",
+        "ashan@srilankainluxury.com",
+      ],
       bcc: ["workingrandila@gmail.com"],
       subject: `New Customer Inquiry : ${payload.name.concat("→", payload.phone || payload.email || "N/A")}`,
       html: ContactUsEmailTemplate(payload),
-      attachments : attachments.length > 0 ? attachments : undefined
+      attachments: attachments.length > 0 ? attachments : undefined,
     });
-    return Response.json({success : true , data : data});
+    return Response.json({ success: true, data: data });
   } catch (err) {
     return Response.json({ success: false, data: err });
   }

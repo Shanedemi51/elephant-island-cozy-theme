@@ -326,10 +326,10 @@ export default function TourSection() {
             </div>
 
             <ul className="mt-2 text-sm">
-              <li>Budget : From USD 299</li>
-              <li>3 Star : From USD 399</li>
-              <li>4 Star : From USD 499</li>
-              <li>Luxury : From USD 599</li>
+              <li>Budget : From USD 578</li>
+              <li>3 Star : From USD 622</li>
+              <li>4 Star : From USD 678</li>
+              <li>Luxury : From USD 772</li>
             </ul>
 
             <div>

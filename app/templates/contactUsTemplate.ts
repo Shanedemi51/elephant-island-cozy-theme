@@ -1,6 +1,8 @@
 import { ContactUsPayload } from "@/types/email.types";
 
-export const ContactUsEmailTemplate =(payload : ContactUsPayload)=>`<!DOCTYPE html>
+export const ContactUsEmailTemplate = (
+  payload: ContactUsPayload,
+) => `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -18,7 +20,8 @@ export const ContactUsEmailTemplate =(payload : ContactUsPayload)=>`<!DOCTYPE ht
     .info-table td { padding: 12px 0; border-bottom: 1px solid #e8ecef; vertical-align: top; }
     .info-table .label { width: 140px; font-weight: 600; color: #444; }
     .info-table .value { color: #222; }
-    .message-box { background-color: #f8fafc; padding: 20px; border-radius: 8px; border: 1px solid #e0e7e0; margin: 25px 0; white-space: pre-wrap; font-size: 15px; line-height: 1.55; }
+    .message-box { background-color: #f8fafc; padding: 3px 3px 3px 3px; padding-bottom: 3px;  border-radius: 8px; border: 1px solid #e0e7e0; margin: 10px 0; white-space: pre-line; font-size: 15px; line-height: 1.5; }
+    .message-box span {text-indent : 4px;}
     .action { text-align: center; margin: 30px 0; }
     .button { display: inline-block; background-color: #2e8b57; color: white !important; padding: 14px 32px; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 6px; }
     .button:hover { background-color: #1a4d2e; }
@@ -85,7 +88,7 @@ export const ContactUsEmailTemplate =(payload : ContactUsPayload)=>`<!DOCTYPE ht
 
               <h2>Message from Customer</h2>
               <div class="message-box">
-                ${payload.description || "N/A"}
+                <span>  ${payload.description || "N/A"}</span>
               </div>
 
               <div class="action">
@@ -94,7 +97,7 @@ export const ContactUsEmailTemplate =(payload : ContactUsPayload)=>`<!DOCTYPE ht
 
               <p style="font-size:15px; color:#555; text-align:center; margin-top:30px;">
                 Please respond within 24 hours to maintain our high service standards.<br>
-                This enquiry came from: <strong>https://elephant-island.com</strong>
+                This enquiry came from: <strong>${payload.currentUrl || "N/A"}</strong>
               </p>
 
             </td>
