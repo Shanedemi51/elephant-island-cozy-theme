@@ -6,11 +6,16 @@ import ContactModal from "./ContactModal";
 
 type MenuGroup = { title: string; items: { label: string; href: string }[] };
 
-export default function Navbar() {
+type NavbarProps = {
+  forceWhite?: boolean;
+};
+
+export default function Navbar({ forceWhite = false }: NavbarProps) {
   const [scrollY, setScrollY] = useState(0);
   const [isPastHero, setIsPastHero] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+  const hasWhiteNavbar = forceWhite || isPastHero;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,17 +49,17 @@ export default function Navbar() {
   const navbarClasses = `
     transition-all duration-300 ease-in-out
     ${scrollY > 100 ? "py-4" : "py-6"}
-    ${scrollY > 100 && !isPastHero ? "backdrop-blur-sm bg-black/20" : ""}
-    ${isPastHero ? "bg-white" : "bg-transparent"}
+    ${scrollY > 100 && !hasWhiteNavbar ? "backdrop-blur-sm bg-black/20" : ""}
+    ${hasWhiteNavbar ? "bg-white" : "bg-transparent"}
   `;
 
-  const textClasses = isPastHero ? "text-gray-900" : "text-white";
-  const bookButtonClasses = isPastHero
+  const textClasses = hasWhiteNavbar ? "text-gray-900" : "text-white";
+  const bookButtonClasses = hasWhiteNavbar
     ? "bg-[#E8A7C5] text-black"
     : "bg-[#E8A7C5] text-black backdrop-blur-md hover:bg-white/20";
 
-  const burgerLine1 = isPastHero ? "bg-gray-800" : "bg-white/85";
-  const burgerLine2 = isPastHero ? "bg-gray-600" : "bg-white/65";
+  const burgerLine1 = hasWhiteNavbar ? "bg-gray-800" : "bg-white/85";
+  const burgerLine2 = hasWhiteNavbar ? "bg-gray-600" : "bg-white/65";
 
   const primaryLinks = [
     { label: "Home", href: "/" },
@@ -97,7 +102,7 @@ export default function Navbar() {
       {/* NAVBAR */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 border-b ${
-          scrollY > 800 ? "border-slate-200" : "border-slate-50/20"
+          hasWhiteNavbar || scrollY > 800 ? "border-slate-200" : "border-slate-50/20"
         } ${navbarClasses}`}
       >
         <nav className="mx-auto max-w-[1400px] px-4 sm:px-6">
@@ -130,7 +135,7 @@ export default function Navbar() {
                     key={l.label}
                     href={l.href}
                     className={`${
-                      isPastHero
+                      hasWhiteNavbar
                         ? "text-gray-700 hover:text-gray-900"
                         : "text-white/85 hover:text-white"
                     } transition`}
