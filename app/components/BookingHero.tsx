@@ -7,7 +7,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo, useState } from "react";
 import { Controller, Path, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { usePathname } from "next/navigation";
 
 const COUNTRIES = [
   "Afghanistan",
@@ -271,6 +270,7 @@ export default function BookingHero({
       accomodationStandard: "",
       country: "",
       currentUrl: currenthPath,
+      formLocation : "Meet Team Form"
     },
   });
 
@@ -285,6 +285,7 @@ export default function BookingHero({
       formData.append("accomodationStandard", payload.accomodationStandard);
       formData.append("country", payload.country);
       formData.append("currentUrl", payload.currentUrl as string);
+      formData.append("formLocation" ,payload.formLocation as string);
       if (payload.description) {
         formData.append("description", payload.description);
       }
@@ -379,7 +380,7 @@ export default function BookingHero({
                 </h1>
 
                 <h2 className="font-marcellus text-xl leading-[1.02] text-white md:text-2xl mt-6">
-                  Tel : +94 77 707 2265
+                  Tel : +94 77 059 9092
                 </h2>
 
                 <h2 className="font-marcellus text-xl leading-[1.02] text-white md:text-2xl mt-6">

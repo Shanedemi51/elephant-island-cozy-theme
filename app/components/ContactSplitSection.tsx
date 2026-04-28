@@ -125,7 +125,7 @@ export default function ContactSplitSection() {
                 <span className="font-semibold text-black/80">
                   Phone / WhatsApp:
                 </span>{" "}
-                +94 77 707 2265
+                +94 77 059 9092
               </p>
 
               <p className="text-blue-500 break-all">

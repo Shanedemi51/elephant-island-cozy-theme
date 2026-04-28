@@ -97,7 +97,12 @@ export const ContactUsEmailTemplate = (
 
               <p style="font-size:15px; color:#555; text-align:center; margin-top:30px;">
                 Please respond within 24 hours to maintain our high service standards.<br>
-                This enquiry came from: <strong>${payload.currentUrl || "N/A"}</strong>
+                <br/>
+                <Strong>
+                This enquiry came from
+                </Strong> <br/>
+                Page: <strong>${payload.currentUrl || "N/A"}</strong><br/>
+                Form: <strong>${payload.formLocation ?? "N/A"}</strong>
               </p>
 
             </td>
@@ -107,7 +112,7 @@ export const ContactUsEmailTemplate = (
           <tr>
             <td class="footer">
               <p>Elephant Island – Sri Lanka In Luxury Ltd</p>
-              <p><a href="https://www.elephant-island.com/">www.elephant-island.com</a> • <a href="mailto:info@elephant-island.com">info@elephant-island.com</a> • +94 77 707 2265</p>
+              <p><a href="https://www.elephant-island.com/">www.elephant-island.com</a> • <a href="mailto:info@elephant-island.com">info@elephant-island.com</a> • +94 77 059 9092</p>
               <p style="margin-top:18px; opacity:0.85;">© 2026 Elephant-Island. Internal use only.</p>
             </td>
           </tr>

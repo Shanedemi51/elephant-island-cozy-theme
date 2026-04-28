@@ -211,12 +211,14 @@ interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
   showItineraryUpload?: boolean;
+  formLocation: string;
 }
 
 export default function ContactModal({
   isOpen,
   onClose,
   showItineraryUpload = false,
+  formLocation,
 }: ContactModalProps) {
   // const fromUrl = typeof window !== undefined ? window.location.href : "Intentional Empty String";
 
@@ -267,6 +269,7 @@ export default function ContactModal({
       accomodationStandard: "",
       country: "",
       currentUrl: currenthPath,
+      formLocation : formLocation,
     },
   });
 
@@ -281,6 +284,7 @@ export default function ContactModal({
       formData.append("accomodationStandard", payload.accomodationStandard);
       formData.append("country", payload.country);
       formData.append("currentUrl", payload.currentUrl as string);
+      formData.append("formLocation" , payload.formLocation as string);
 
       if (payload.description) {
         formData.append("description", payload.description);
@@ -609,7 +613,7 @@ export default function ContactModal({
                         // }
                         className="mt-2 block w-full text-sm text-gray-600 
                 file:mr-4 file:rounded-lg file:border-0 
-                file:bg-[#E8A7C5] file:px-5 file:py-2.5 
+                file:bg-custom-pink file:px-5 file:py-2.5 
                 file:text-sm file:font-semibold file:text-white 
                 file:shadow-sm file:transition-all file:duration-200 
                 hover:file:bg-[#d98fb0] 
@@ -660,14 +664,14 @@ export default function ContactModal({
                         e.stopPropagation();
                         next();
                       }}
-                      className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                      className="w-2/3 bg-custom-pink py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
                     >
                       Next
                     </button>
                   ) : (
                     <button
                       type="submit"
-                      className="w-2/3 bg-[#E8A7C5] py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
+                      className="w-2/3 bg-custom-pink py-3 text-center font-medium text-white transition hover:brightness-95 cursor-pointer"
                     >
                       {isSubmitting ? "Sending Email..." : "Send Enquiry"}
                     </button>

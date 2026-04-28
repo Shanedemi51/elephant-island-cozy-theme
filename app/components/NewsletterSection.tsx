@@ -10,14 +10,6 @@ type NewsletterSectionProps = {
 export default function NewsletterSection({
   strength = 100,
 }: NewsletterSectionProps) {
-  const [email, setEmail] = useState("");
-  const [agreed, setAgreed] = useState(false);
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // handle submit here
-  }
-
   return (
     <Parallax
       bgImage="/banner.jpeg"
@@ -53,9 +45,9 @@ export default function NewsletterSection({
                 Elephant Island Is A Brand Name Of Sri Lanka In Luxury Ltd.
               </p>
 
-               <p className="text-xs font-semibold tracking-[0.25em] text-white mt-12 hidden lg:block">
-                  Established Since 2003
-                </p>
+              <p className="text-xs font-semibold tracking-[0.25em] text-white mt-12 hidden lg:block">
+                Established Since 2003
+              </p>
             </div>
           </div>
         </div>

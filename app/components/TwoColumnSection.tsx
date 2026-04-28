@@ -16,7 +16,7 @@ const TwoColumnSection = () => {
               bgImage="/images/gal-oya-lodge.jpeg"
               bgImageAlt="Restaurant interior"
               strength={75}
-              className="h-[400px] sm:h-[600px] lg:h-[90dvh] 2xl:h-[700px] w-auto overflow-hidden hidden xl:block"
+              className="h-100 sm:h-150 lg:h-[90dvh] 2xl:h-175 w-auto overflow-hidden hidden xl:block"
             >
               <div className="h-full flex items-center justify-center">
                 {/* Optional: Add overlay or content here if needed */}
@@ -58,14 +58,14 @@ const TwoColumnSection = () => {
             <div className="flex justify-center lg:justify-start">
               <button 
                 onClick={() => setIsContactModalOpen(true)}
-                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-marcellus font-medium text-black bg-[#E8A7C5] rounded-full transition-all duration-300 overflow-hidden cursor-pointer"
+                className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-marcellus font-medium text-black bg-custom-pink rounded-full transition-all duration-300 overflow-hidden cursor-pointer"
               >
                 {/* Button text */}
                 <span className="px-4">Contact Us</span>
 
 
                 {/* Hover effect overlay */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-none group-hover:transition-transform group-hover:duration-700" />
+                <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-none group-hover:transition-transform group-hover:duration-700" />
               </button>
             </div>
           </div>
@@ -76,6 +76,7 @@ const TwoColumnSection = () => {
       <ContactModal 
         isOpen={isContactModalOpen} 
         onClose={() => setIsContactModalOpen(false)} 
+        formLocation="Design Your Itinerary Form"
       />
     </section>
   );
