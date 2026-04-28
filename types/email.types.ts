@@ -10,7 +10,7 @@ export const ContactUsSchema = z.object({
     description : z.string().optional(),
     currentUrl : z.string().optional(),
     quotationFile : z.any().refine((files)=> !files || files.length === 0 || files[0].size <5*1024*1024 , "Max file size is 5 MB").optional(),
-    
+    formLocation : z.string().optional(),    
 });
 
 

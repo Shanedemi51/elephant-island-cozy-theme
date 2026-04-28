@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const description = formData.get("description") as string | null;
     const quotationFile = formData.get("quotationFile") as File | null;
     const currentUrl = formData.get("currentUrl") as string;
+    const formLocation = formData.get("formLocation") as string;
 
     const attachments: { filename: string; content: Buffer }[] = [];
     if (quotationFile) {
@@ -36,16 +37,18 @@ export async function POST(req: Request) {
       country,
       description: description || undefined,
       currentUrl,
+      formLocation
     };
 
     const data = await resend.emails.send({
       from: "Elephant-Island <notifications@elephant-island.com>",
-      to: [
-        "info@elephant-island.com",
-        "riyaz@srilankainluxury.com",
-        "ashan@srilankainluxury.com",
-      ],
-      bcc: ["workingrandila@gmail.com"],
+      // to: [
+      //   "info@elephant-island.com",
+      //   "riyaz@srilankainluxury.com",
+      //   "ashan@srilankainluxury.com",
+      // ],
+      // bcc: ["workingrandila@gmail.com"],
+      to:["workingrandila@gmail.com"],
       subject: `New Customer Inquiry : ${payload.name.concat("→", payload.phone || payload.email || "N/A")}`,
       html: ContactUsEmailTemplate(payload),
       attachments: attachments.length > 0 ? attachments : undefined,

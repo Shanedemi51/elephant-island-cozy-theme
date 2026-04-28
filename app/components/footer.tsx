@@ -12,7 +12,7 @@ type FooterProps = {
 
 export default function SiteFooter({
   address = "Nugegoda Business Center 80 Nawala Road, Nugegoda, Sri Lanka",
-  phone = "+94 77 707 2265",
+  phone = "+94 77 059 9092",
   email = "info@elephant-island.com",
 }: FooterProps) {
   return (

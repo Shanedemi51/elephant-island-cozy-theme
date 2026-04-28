@@ -101,7 +101,7 @@ export default function VideoLandingHero({
         <h1 className="font-marcellus text-2xl mt-12">Sri Lanka Holidays</h1>
       </div>
 
-      <ContactModal isOpen={isContactModalOpen} onClose={()=>setIsContactModalOpen(false)}/>
+      <ContactModal isOpen={isContactModalOpen} onClose={()=>setIsContactModalOpen(false)} formLocation="Video Landing Hero"/>
     </section>
   );
 }

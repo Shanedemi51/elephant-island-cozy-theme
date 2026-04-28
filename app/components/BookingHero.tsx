@@ -4,10 +4,9 @@
 import { Parallax } from "react-parallax";
 import { ContactUsPayload, ContactUsSchema } from "@/types/email.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Controller, Path, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { usePathname } from "next/navigation";
 
 const COUNTRIES = [
   "Afghanistan",
@@ -215,6 +214,12 @@ const COUNTRIES = [
 //   country: string;
 // };
 
+const getCurrentPath = () => {
+  return typeof window !== "undefined"
+    ? window.location.href
+    : "location unidentified";
+};
+
 const inputClass =
   "mt-2 w-full bg-white text-black placeholder:text-black/25 border-t border-slate-200";
 const fieldWrapClass = "border border-[#B8A77C]/60 p-3 bg-white rounded-lg";
@@ -225,14 +230,7 @@ export default function BookingHero({
   backgroundImage: string;
 }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [currenthPath, setCurrentPath] = useState("");
-  useEffect(() => {
-    const fromUrl =
-      typeof window !== undefined
-        ? window.location.href
-        : "Intentional Empty String";
-    setCurrentPath(fromUrl);
-  }, []);
+  const currentPath = getCurrentPath();
 
   const steps = useMemo(
     () => [
@@ -270,7 +268,8 @@ export default function BookingHero({
       travelingWith: "",
       accomodationStandard: "",
       country: "",
-      currentUrl: currenthPath,
+      currentUrl: currentPath,
+      formLocation: "Meet Team Form",
     },
   });
 
@@ -285,6 +284,7 @@ export default function BookingHero({
       formData.append("accomodationStandard", payload.accomodationStandard);
       formData.append("country", payload.country);
       formData.append("currentUrl", payload.currentUrl as string);
+      formData.append("formLocation", payload.formLocation as string);
       if (payload.description) {
         formData.append("description", payload.description);
       }
@@ -311,7 +311,7 @@ export default function BookingHero({
 
       toast.success("Email Sent!");
       closeModal();
-    } catch (err) {
+    } catch {
       toast.error("Error Occured");
     }
   };
@@ -379,7 +379,7 @@ export default function BookingHero({
                 </h1>
 
                 <h2 className="font-marcellus text-xl leading-[1.02] text-white md:text-2xl mt-6">
-                  Tel : +94 77 707 2265
+                  Tel : +94 77 059 9092
                 </h2>
 
                 <h2 className="font-marcellus text-xl leading-[1.02] text-white md:text-2xl mt-6">

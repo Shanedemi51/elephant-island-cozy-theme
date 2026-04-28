@@ -17,7 +17,7 @@ type Tour = {
 export default function TourGrid({ tours }: { tours: Tour[] }) {
   return (
     <section className="w-full bg-[#f7f5ef] py-16">
-      <div className="mx-auto max-w-[1400px] px-6 sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-350 px-6 sm:px-8 lg:px-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {tours.map((tour) => {
             const Wrapper: React.ElementType = tour.href ? Link : "div";
@@ -43,7 +43,7 @@ export default function TourGrid({ tours }: { tours: Tour[] }) {
                       draggable={false}
                     />
                     {/* overlay for readability */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-black/70" />
+                    <div className="pointer-events-none absolute inset-0 bg-linear-to-brom-black/20 via-black/10 to-black/70" />
                   </div>
 
                   {/* content overlay */}
@@ -54,7 +54,7 @@ export default function TourGrid({ tours }: { tours: Tour[] }) {
                         {tour.badge}
                       </p>
                     ) : (
-                      <div className="mb-auto mt-2 h-[14px]" />
+                      <div className="mb-auto mt-2 h-3.5" />
                     )}
 
                     <h3 className="font-marcellus text-2xl text-white sm:text-3xl">
@@ -71,7 +71,7 @@ export default function TourGrid({ tours }: { tours: Tour[] }) {
                       <div className="pl-4">More info</div>
 
                       <div>
-                        <span className="inline-flex p-4 items-center justify-center rounded-full ring-1 ring-white/20 bg-[#E8A7C5]">
+                        <span className="inline-flex p-4 items-center justify-center rounded-full ring-1 ring-white/20 bg-custom-pink">
                           <ChevronRight className="w-3 h-3 text-black" />
                         </span>
                       </div>

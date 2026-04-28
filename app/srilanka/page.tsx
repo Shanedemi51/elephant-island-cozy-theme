@@ -3,9 +3,6 @@
 import Image from "next/image";
 import HotelHeroSection from "../components/HotelHeroSection";
 import Navbar from "../components/Navbar";
-import IntroText from "../components/IntroText";
-
-import { Parallax } from "react-parallax";
 import NewsletterSection from "../components/NewsletterSection";
 import SiteFooter from "../components/footer";
 import BookingHero from "../components/BookingHero";
