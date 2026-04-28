@@ -33,13 +33,12 @@ const TwoColumnSectionReverse = () => {
 
             {/* CTA Button */}
             <div className="flex justify-center lg:justify-start">
-              <button 
+              <button
                 onClick={() => setIsContactModalOpen(true)}
                 className="group relative inline-flex items-center justify-center px-8 py-4 text-lg font-marcellus font-medium text-black bg-custom-pink rounded-full transition-all duration-300 overflow-hidden cursor-pointer"
               >
                 {/* Button text */}
                 <span className="px-4">Contact Us</span>
-
 
                 {/* Hover effect overlay */}
                 <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-none group-hover:transition-transform group-hover:duration-700" />
@@ -49,7 +48,7 @@ const TwoColumnSectionReverse = () => {
 
           {/* Right Column - parallex Image */}
           <div className="order-2 lg:order-2 lg:p-10">
-           <Parallax
+            <Parallax
               bgImage="/images/Nine-Arch-Bridge-ella.jpeg"
               bgImageAlt="Restaurant interior"
               strength={75}
@@ -59,19 +58,26 @@ const TwoColumnSectionReverse = () => {
                 {/* Optional: Add overlay or content here if needed */}
               </div>
             </Parallax>
-            <p className="text-center mt-2 text-sm text-gray-700 hidden xl:block">Nine Arch Bridge, Ella</p>
+            <p className="text-center mt-2 text-sm text-gray-700 hidden xl:block">
+              Nine Arch Bridge, Ella
+            </p>
 
-            <img src="/images/Nine-Arch-Bridge-ella.jpeg" className="xl:hidden" alt="" />
-            <p className="text-center mt-2 text-sm text-gray-700 xl:hidden">Nine Arch Bridge, Ella</p>
-
+            <img
+              src="/images/Nine-Arch-Bridge-ella.jpeg"
+              className="xl:hidden"
+              alt=""
+            />
+            <p className="text-center mt-2 text-sm text-gray-700 xl:hidden">
+              Nine Arch Bridge, Ella
+            </p>
           </div>
         </div>
       </div>
 
       {/* Contact Modal */}
-      <ContactModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
         showItineraryUpload
         formLocation="Cheaper Offer Form"
       />

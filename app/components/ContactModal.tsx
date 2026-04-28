@@ -210,12 +210,14 @@ interface ContactModalProps {
   isOpen: boolean;
   onClose: () => void;
   showItineraryUpload?: boolean;
-  formLocation: string;
+  formLocation?: string;
 }
 
-const getCurrentPath=()=>{
-  return typeof window !== "undefined" ? window.location.href : "location unidentified";
-}
+const getCurrentPath = () => {
+  return typeof window !== "undefined"
+    ? window.location.href
+    : "location unidentified";
+};
 
 export default function ContactModal({
   isOpen,
@@ -228,7 +230,7 @@ export default function ContactModal({
   const [step, setStep] = useState<1 | 2 | 3>(1);
   // const [currentPath, setCurrentPath] = useState("");
   // useEffect(() => {
-    
+
   // }, []);
   const currentPath = getCurrentPath();
 
@@ -316,7 +318,7 @@ export default function ContactModal({
 
       toast.success("Email Sent!");
       closeModal();
-    } catch{
+    } catch {
       toast.error("Error Occured");
     }
   };

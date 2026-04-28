@@ -102,7 +102,9 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
       {/* NAVBAR */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 border-b ${
-          hasWhiteNavbar || scrollY > 800 ? "border-slate-200" : "border-slate-50/20"
+          hasWhiteNavbar || scrollY > 800
+            ? "border-slate-200"
+            : "border-slate-50/20"
         } ${navbarClasses}`}
       >
         <nav className="mx-auto max-w-350 px-4 sm:px-6">
@@ -153,7 +155,6 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
                 href="/"
                 className={`${textClasses} text-center leading-none select-none`}
               >
-              
                 <div className="font-marcellus tracking-[0.22em] text-sm md:text-base">
                   ELEPHANT ISLAND
                 </div>
@@ -238,12 +239,9 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
                       {g.title}
                     </div>
                     <div className="mt-5 space-y-4 text-[15px] text-[#2a1c14]/75">
-                      {g.items.map((it) => (
+                      {g.items.map((it) =>
                         g.title === "Discover" ? (
-                          <span
-                            key={it.label}
-                            className="block"
-                          >
+                          <span key={it.label} className="block">
                             {it.label}
                           </span>
                         ) : (
@@ -255,8 +253,8 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
                           >
                             {it.label}
                           </Link>
-                        )
-                      ))}
+                        ),
+                      )}
                     </div>
                   </div>
                 ))}
@@ -288,9 +286,9 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
       </aside>
 
       {/* Contact Modal */}
-      <ContactModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
         formLocation="NavBar Form"
       />
     </>
