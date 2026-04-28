@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useState } from "react";
 import { Parallax } from "react-parallax";
 
 type NewsletterSectionProps = {

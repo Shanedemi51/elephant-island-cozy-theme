@@ -1,71 +1,67 @@
 "use client";
-
-import React, { useMemo, useState } from "react";
-
-type ContactCard = {
-  title: string;
-  subtitle: string;
-  phone: string;
-  email: string;
-};
+// type ContactCard = {
+//   title: string;
+//   subtitle: string;
+//   phone: string;
+//   email: string;
+// };
 
 export default function ContactSplitSection() {
-  const cards: ContactCard[] = useMemo(
-    () => [
-      {
-        title: "Accommodation",
-        subtitle: "Enquiries & Bookings",
-        phone: "+679 345 7788",
-        email: "stay@elis.com",
-      },
-      {
-        title: "Restaurants",
-        subtitle: "Enquiries & Bookings",
-        phone: "+679 345 2255",
-        email: "dine@elis.com",
-      },
-      {
-        title: "Day Spa & Gym",
-        subtitle: "Enquiries & Bookings",
-        phone: "+679 345 6677",
-        email: "wellness@elis.com",
-      },
-      {
-        title: "Banquet & Weddings",
-        subtitle: "Enquiries & Bookings",
-        phone: "+679 334 2211",
-        email: "events@elis.com",
-      },
-    ],
-    [],
-  );
+  // const cards: ContactCard[] = useMemo(
+  //   () => [
+  //     {
+  //       title: "Accommodation",
+  //       subtitle: "Enquiries & Bookings",
+  //       phone: "+679 345 7788",
+  //       email: "stay@elis.com",
+  //     },
+  //     {
+  //       title: "Restaurants",
+  //       subtitle: "Enquiries & Bookings",
+  //       phone: "+679 345 2255",
+  //       email: "dine@elis.com",
+  //     },
+  //     {
+  //       title: "Day Spa & Gym",
+  //       subtitle: "Enquiries & Bookings",
+  //       phone: "+679 345 6677",
+  //       email: "wellness@elis.com",
+  //     },
+  //     {
+  //       title: "Banquet & Weddings",
+  //       subtitle: "Enquiries & Bookings",
+  //       phone: "+679 334 2211",
+  //       email: "events@elis.com",
+  //     },
+  //   ],
+  //   [],
+  // );
 
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  // const [form, setForm] = useState({
+  //   name: "",
+  //   email: "",
+  //   subject: "",
+  //   message: "",
+  // });
 
-  function onChange(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
-    const { name, value } = e.target;
-    setForm((s) => ({ ...s, [name]: value }));
-  }
+  // function onChange(
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  // ) {
+  //   const { name, value } = e.target;
+  //   setForm((s) => ({ ...s, [name]: value }));
+  // }
 
-  function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    // hook your API here
-    console.log("submit", form);
-  }
+  // function onSubmit(e: React.FormEvent) {
+  //   e.preventDefault();
+  //   // hook your API here
+  //   console.log("submit", form);
+  // }
 
   return (
     <section className="w-full bg-white">
       <div className="">
         {/* LEFT: contact info */}
         <div className="px-6 py-16 sm:px-10 lg:px-16 grid grid-cols-1 lg:grid-cols-3 gap-8">
-
           <div className="mx-auto max-w-165 border border-green-500 rounded-2xl p-8">
             <p className="text-sm font-semibold tracking-[0.18em] text-black/50 text-center lg:text-left">
               WELCOME TO ELEPHANT ISLAND
@@ -233,7 +229,7 @@ export default function ContactSplitSection() {
   );
 }
 
-function Field({
+export function Field({
   name,
   value,
   onChange,

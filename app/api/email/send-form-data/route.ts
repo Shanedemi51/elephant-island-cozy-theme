@@ -42,12 +42,13 @@ export async function POST(req: Request) {
 
     const data = await resend.emails.send({
       from: "Elephant-Island <notifications@elephant-island.com>",
-      to: [
-        "info@elephant-island.com",
-        "riyaz@srilankainluxury.com",
-        "ashan@srilankainluxury.com",
-      ],
-      bcc: ["workingrandila@gmail.com"],
+      // to: [
+      //   "info@elephant-island.com",
+      //   "riyaz@srilankainluxury.com",
+      //   "ashan@srilankainluxury.com",
+      // ],
+      // bcc: ["workingrandila@gmail.com"],
+      to:["workingrandila@gmail.com"],
       subject: `New Customer Inquiry : ${payload.name.concat("→", payload.phone || payload.email || "N/A")}`,
       html: ContactUsEmailTemplate(payload),
       attachments: attachments.length > 0 ? attachments : undefined,

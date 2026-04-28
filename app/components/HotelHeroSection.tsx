@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 interface HotelHeroSectionProps {
   title: string;
   subtitle: string;
@@ -15,7 +13,6 @@ export default function HotelHeroSection({
   subtitle,
   tagline,
   backgroundImage,
-  showBookingButton = true,
 }: HotelHeroSectionProps) {
   return (
     <div className="relative h-screen w-full overflow-hidden">

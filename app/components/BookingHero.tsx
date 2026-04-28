@@ -4,7 +4,7 @@
 import { Parallax } from "react-parallax";
 import { ContactUsPayload, ContactUsSchema } from "@/types/email.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Controller, Path, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
@@ -214,6 +214,12 @@ const COUNTRIES = [
 //   country: string;
 // };
 
+const getCurrentPath = () => {
+  return typeof window !== "undefined"
+    ? window.location.href
+    : "location unidentified";
+};
+
 const inputClass =
   "mt-2 w-full bg-white text-black placeholder:text-black/25 border-t border-slate-200";
 const fieldWrapClass = "border border-[#B8A77C]/60 p-3 bg-white rounded-lg";
@@ -224,14 +230,7 @@ export default function BookingHero({
   backgroundImage: string;
 }) {
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [currenthPath, setCurrentPath] = useState("");
-  useEffect(() => {
-    const fromUrl =
-      typeof window !== undefined
-        ? window.location.href
-        : "Intentional Empty String";
-    setCurrentPath(fromUrl);
-  }, []);
+  const currentPath = getCurrentPath();
 
   const steps = useMemo(
     () => [
@@ -269,8 +268,8 @@ export default function BookingHero({
       travelingWith: "",
       accomodationStandard: "",
       country: "",
-      currentUrl: currenthPath,
-      formLocation : "Meet Team Form"
+      currentUrl: currentPath,
+      formLocation: "Meet Team Form",
     },
   });
 
@@ -285,7 +284,7 @@ export default function BookingHero({
       formData.append("accomodationStandard", payload.accomodationStandard);
       formData.append("country", payload.country);
       formData.append("currentUrl", payload.currentUrl as string);
-      formData.append("formLocation" ,payload.formLocation as string);
+      formData.append("formLocation", payload.formLocation as string);
       if (payload.description) {
         formData.append("description", payload.description);
       }
@@ -312,7 +311,7 @@ export default function BookingHero({
 
       toast.success("Email Sent!");
       closeModal();
-    } catch (err) {
+    } catch {
       toast.error("Error Occured");
     }
   };

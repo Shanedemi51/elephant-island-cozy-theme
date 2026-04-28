@@ -2,9 +2,8 @@
 
 import { ContactUsPayload, ContactUsSchema } from "@/types/email.types";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePathname } from "next/navigation";
-import React, { useEffect, useMemo, useState } from "react";
-import { Controller, FieldName, Path, useForm } from "react-hook-form";
+import { useMemo, useState } from "react";
+import { Controller, Path, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 const COUNTRIES = [
@@ -214,6 +213,10 @@ interface ContactModalProps {
   formLocation: string;
 }
 
+const getCurrentPath=()=>{
+  return typeof window !== "undefined" ? window.location.href : "location unidentified";
+}
+
 export default function ContactModal({
   isOpen,
   onClose,
@@ -223,14 +226,15 @@ export default function ContactModal({
   // const fromUrl = typeof window !== undefined ? window.location.href : "Intentional Empty String";
 
   const [step, setStep] = useState<1 | 2 | 3>(1);
-  const [currenthPath, setCurrentPath] = useState("");
-  useEffect(() => {
-    const fromUrl =
-      typeof window !== undefined
-        ? window.location.href
-        : "Intentional Empty String";
-    setCurrentPath(fromUrl);
-  }, []);
+  // const [currentPath, setCurrentPath] = useState("");
+  // useEffect(() => {
+    
+  // }, []);
+  const currentPath = getCurrentPath();
+
+  // const [currentPath] = useState(() =>
+  //   typeof window !== "undefined" ? window.location.href : "location unidentified",
+  // );
 
   const steps = useMemo(
     () => [
@@ -268,8 +272,8 @@ export default function ContactModal({
       travelingWith: "",
       accomodationStandard: "",
       country: "",
-      currentUrl: currenthPath,
-      formLocation : formLocation,
+      currentUrl: currentPath,
+      formLocation: formLocation,
     },
   });
 
@@ -284,7 +288,7 @@ export default function ContactModal({
       formData.append("accomodationStandard", payload.accomodationStandard);
       formData.append("country", payload.country);
       formData.append("currentUrl", payload.currentUrl as string);
-      formData.append("formLocation" , payload.formLocation as string);
+      formData.append("formLocation", payload.formLocation as string);
 
       if (payload.description) {
         formData.append("description", payload.description);
@@ -312,7 +316,7 @@ export default function ContactModal({
 
       toast.success("Email Sent!");
       closeModal();
-    } catch (err) {
+    } catch{
       toast.error("Error Occured");
     }
   };
