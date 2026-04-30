@@ -102,10 +102,12 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
       {/* NAVBAR */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 border-b ${
-          hasWhiteNavbar || scrollY > 800 ? "border-slate-200" : "border-slate-50/20"
+          hasWhiteNavbar || scrollY > 800
+            ? "border-slate-200"
+            : "border-slate-50/20"
         } ${navbarClasses}`}
       >
-        <nav className="mx-auto max-w-[1400px] px-4 sm:px-6">
+        <nav className="mx-auto max-w-350 px-4 sm:px-6">
           <div
             className={`${
               scrollY > 100 ? "h-12" : "h-16"
@@ -122,7 +124,7 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
                 onClick={() => setIsMenuOpen(true)}
                 className="md:hidden group inline-flex items-center justify-center"
               >
-                <span className="grid gap-[6px]">
+                <span className="grid gap-1.5">
                   <span className={`h-px w-5 ${burgerLine1} transition`} />
                   <span className={`h-px w-4 ${burgerLine2} transition`} />
                 </span>
@@ -153,7 +155,6 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
                 href="/"
                 className={`${textClasses} text-center leading-none select-none`}
               >
-              
                 <div className="font-marcellus tracking-[0.22em] text-sm md:text-base">
                   ELEPHANT ISLAND
                 </div>
@@ -176,7 +177,7 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
 
       {/* Overlay */}
       <div
-        className={`fixed inset-0 z-[60] bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${
+        className={`fixed inset-0 z-60 bg-black/30 backdrop-blur-[2px] transition-opacity duration-300 md:hidden ${
           isMenuOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
         onClick={closeMenu}
@@ -187,7 +188,7 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
       <aside
         id="mobile-sidebar"
         aria-hidden={!isMenuOpen}
-        className={`fixed right-0 top-0 z-[70] h-dvh w-[88vw] max-w-[460px] md:hidden
+        className={`fixed right-0 top-0 z-70 h-dvh w-[88vw] max-w-115 md:hidden
   bg-[#f3efe8] text-[#2a1c14]
   transition-transform duration-300 ease-out
   ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
@@ -238,12 +239,9 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
                       {g.title}
                     </div>
                     <div className="mt-5 space-y-4 text-[15px] text-[#2a1c14]/75">
-                      {g.items.map((it) => (
+                      {g.items.map((it) =>
                         g.title === "Discover" ? (
-                          <span
-                            key={it.label}
-                            className="block"
-                          >
+                          <span key={it.label} className="block">
                             {it.label}
                           </span>
                         ) : (
@@ -255,8 +253,8 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
                           >
                             {it.label}
                           </Link>
-                        )
-                      ))}
+                        ),
+                      )}
                     </div>
                   </div>
                 ))}
@@ -288,9 +286,10 @@ export default function Navbar({ forceWhite = false }: NavbarProps) {
       </aside>
 
       {/* Contact Modal */}
-      <ContactModal 
-        isOpen={isContactModalOpen} 
-        onClose={() => setIsContactModalOpen(false)} 
+      <ContactModal
+        isOpen={isContactModalOpen}
+        onClose={() => setIsContactModalOpen(false)}
+        formLocation="NavBar Form"
       />
     </>
   );

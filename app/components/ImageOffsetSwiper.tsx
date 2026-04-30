@@ -44,7 +44,7 @@ export default function OutstandingViewsSwiper({ slides }: { slides: Slide[] }) 
 
   return (
     <section className="w-full bg-[#f7f5ef] py-10 overflow-hidden">
-      <div className="relative mx-auto mt-10 max-w-[1400px]">
+      <div className="relative mx-auto mt-10 max-w-350">
         {/* only-at-start left gap */}
         <div
           className={[
@@ -61,7 +61,7 @@ export default function OutstandingViewsSwiper({ slides }: { slides: Slide[] }) 
             grabCursor
             longSwipesRatio={0.15}
             threshold={8}
-            className="!overflow-visible"
+            className="overflow-visible!"
           >
             {slides.map((s) => {
               const handleClick = s.href ? () => handleCardClick(s.href!) : undefined;
@@ -72,7 +72,7 @@ export default function OutstandingViewsSwiper({ slides }: { slides: Slide[] }) 
               return (
                 <SwiperSlide
                   key={s.id}
-                  className="!w-[280px] xs:!w-[320px] sm:!w-[360px] md:!w-[420px] lg:!w-[400px]"
+                  className="w-70! xs:!w-[320px] sm:w-90! md:w-105! lg:w-100!"
                 >
                   <article className="group relative overflow-hidden bg-black/5 shadow-sm ring-1 ring-black/10">
                     <div
@@ -99,7 +99,7 @@ export default function OutstandingViewsSwiper({ slides }: { slides: Slide[] }) 
                             {s.badge}
                           </p>
                         ) : (
-                          <div className="mb-auto mt-2 h-[14px]" />
+                          <div className="mb-auto mt-2 h-3.5" />
                         )}
 
                         <h3 className="font-marcellus text-3xl text-white sm:text-4xl">
@@ -118,7 +118,7 @@ export default function OutstandingViewsSwiper({ slides }: { slides: Slide[] }) 
                           <div className="pl-4">More info</div>
 
                           <div>
-                            <span className="inline-flex p-4 items-center justify-center rounded-full ring-1 ring-white/20 bg-[#E8A7C5]">
+                            <span className="inline-flex p-4 items-center justify-center rounded-full ring-1 ring-white/20 bg-custom-pink">
                               <ChevronRight className="w-3 h-3 text-black" />
                             </span>
                           </div>

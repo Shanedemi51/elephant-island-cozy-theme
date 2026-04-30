@@ -38,7 +38,7 @@ const services = [
 
 const TwoColumnSection = () => {
   return (
-    <section className="relative py-20 flex items-center bg-white py-20">
+    <section className="relative py-20 flex items-center bg-white">
       <div className="container mx-auto px-6 lg:px-0">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Column - Parallax Image */}
@@ -47,18 +47,17 @@ const TwoColumnSection = () => {
               bgImage="/images/Millennium-Elephant-Foundation.jpeg"
               bgImageAlt="Restaurant interior"
               strength={75}
-              className="h-[400px] sm:h-[600px] lg:h-[90dvh] 2xl:h-[700px] w-auto overflow-hidden"
+              className="h-100 sm:h-150 lg:h-[90dvh] 2xl:h-175 w-auto overflow-hidden"
             >
               <div className="h-full flex items-center justify-center" />
             </Parallax>
-            <p className="text-center mt-2 text-sm text-gray-700">Millennium Elephant Foundation</p>
+            <p className="text-center mt-2 text-sm text-gray-700">
+              Millennium Elephant Foundation
+            </p>
           </div>
 
           {/* Right Column - Text Content */}
           <div className="order-1 lg:order-2 space-y-10 py-8 lg:pt-12">
-           
-           
-
             {/* Main Heading */}
             <h2 className="text-4xl lg:text-5xl xl:text-6xl 2xl:text-8xl font-marcellus text-gray-900 text-center lg:text-left">
               Tourism Services We Offer In Sri Lanka
@@ -66,9 +65,8 @@ const TwoColumnSection = () => {
 
             {/* Services Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-10">
-              {services.map(({ title, desc, Icon, image }) => (
+              {services.map(({ title, desc, image }) => (
                 <div key={title} className="flex gap-4">
-                  
                   <img src={image} alt={title} className="h-6" />
 
                   <div className="space-y-2">

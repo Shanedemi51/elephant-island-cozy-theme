@@ -160,7 +160,7 @@ export default function Preloader({
 
   return (
     <motion.div
-      className="fixed inset-0 z-[9999]"
+      className="fixed inset-0 z-9999"
       style={{ backgroundColor: bg }}
       animate={overlay}
     >
@@ -196,8 +196,8 @@ export default function Preloader({
       </motion.div>
 
       {/* Center logo (moves to navbar) */}
-      <motion.div 
-        className="absolute text-center select-none" 
+      <motion.div
+        className="absolute text-center select-none"
         animate={logo}
         initial={{
           opacity: 1,
@@ -208,7 +208,6 @@ export default function Preloader({
           y: "-50%",
         }}
       >
-        
         <div className="font-marcellus text-lg tracking-[0.22em] text-black/90">
           {logoTextTop} {logoTextBottom}
         </div>

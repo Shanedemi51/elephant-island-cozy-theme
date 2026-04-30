@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import { Parallax } from "react-parallax";
 
 type Card = {
@@ -87,7 +85,7 @@ export default function ParallaxFeatureSection({
                     <img
                       src={c.img}
                       alt={c.title}
-                      className="h-[440px] w-full object-cover"
+                      className="h-110 w-full object-cover"
                       draggable={false}
                     />
                   </div>
@@ -98,7 +96,7 @@ export default function ParallaxFeatureSection({
                   </h3>
 
                   {/* description */}
-                  <p className="mx-auto mt-3 max-w-[340px] text-sm leading-6 text-[#1b1b1b]/70">
+                  <p className="mx-auto mt-3 max-w-85 text-sm leading-6 text-[#1b1b1b]/70">
                     {c.desc}
                   </p>
                 </div>

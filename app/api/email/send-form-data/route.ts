@@ -17,6 +17,7 @@ export async function POST(req: Request) {
     const description = formData.get("description") as string | null;
     const quotationFile = formData.get("quotationFile") as File | null;
     const currentUrl = formData.get("currentUrl") as string;
+    const formLocation = formData.get("formLocation") as string;
 
     const attachments: { filename: string; content: Buffer }[] = [];
     if (quotationFile) {
@@ -36,6 +37,7 @@ export async function POST(req: Request) {
       country,
       description: description || undefined,
       currentUrl,
+      formLocation
     };
 
     const data = await resend.emails.send({
